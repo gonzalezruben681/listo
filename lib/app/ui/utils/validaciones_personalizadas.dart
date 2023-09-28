@@ -1,7 +1,6 @@
-/// Import Libreries
+/// Import Libraries
 import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:string_validator/string_validator.dart';
 
 class ValidacionesPersonalizadas {
   static const String patternCorreo =
@@ -10,6 +9,7 @@ class ValidacionesPersonalizadas {
   static const String patternNumeros = r'^\d+$';
   static const String patternLetras = r'^[A-Za-zñÑÁÉÍÓÚÜáéíóúü\s]+$';
   static const String patternLetrasNumeros = r'^[A-Za-z0-9]+$';
+  static const String patternUrl = r'^(http|https):\/\/[^ "]+$';
 
   Map<String, dynamic>? validarCampoUsuario(AbstractControl<dynamic> control) {
     if (control.value != null) {
@@ -69,20 +69,6 @@ class ValidacionesPersonalizadas {
       if (control.value.toString().contains(' ')) {
         error = errorSinEspacios;
       }
-
-      return error;
-    }
-  }
-
-  Map<String, dynamic>? urlValida(AbstractControl<dynamic> control) {
-    if (control.value != null) {
-      final urlValida = {'urlValida': true};
-
-      Map<String, dynamic>? error;
-
-      if (!isURL(control.value.toString())) {
-        error = urlValida;
-      } else {}
 
       return error;
     }

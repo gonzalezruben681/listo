@@ -2,9 +2,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-///Import Libraries
-import 'package:sizer/sizer.dart';
-
 /// Import Widgets
 import 'package:listo/app/ui/widgets/atom/fondo_atom.dart';
 import 'package:listo/app/ui/widgets/atom/tarjeta_atom.dart';
@@ -20,6 +17,7 @@ import 'package:listo/app/ui/utils/constantes_color_tema.dart';
 class LoginTemplate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final _sizeScreen = MediaQuery.of(context).size;
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -27,14 +25,12 @@ class LoginTemplate extends StatelessWidget {
             Container(
               color: Color(ConstantesColorTema.azulFondos),
             ),
-            FondoWidget(
-              ubicacionImagen: "assets/img/fondo.png",
-            ),
+            FondoWidget("assets/img/fondo.png"),
             Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  height: 20.h,
+                  height: _sizeScreen.height * 0.15,
                   color: Color(ConstantesColorTema.azulLetras),
                 ),
                 Expanded(
@@ -45,13 +41,13 @@ class LoginTemplate extends StatelessWidget {
                         child: Column(
                           children: [
                             TarjetaWidget(
-                              child: FormularioInicioSesion(),
+                              FormularioInicioSesion(),
                             ),
                             SizedBox(
                               height: 15,
                             ),
                             TarjetaWidget(
-                              child: DeslizadorImagenesWidget(),
+                              DeslizadorImagenesWidget(),
                             ),
                           ],
                         ),

@@ -1,8 +1,9 @@
+/// Import Flutter
 import 'package:flutter/material.dart';
-import 'package:listo/app/ui/pages/menu/molecule/menu_lateral_molecule.dart';
 
+/// Import Molecules
 import 'package:listo/app/ui/pages/menu/molecule/menu_molecule.dart';
-import 'package:sizer/sizer.dart';
+import 'package:listo/app/ui/pages/menu/molecule/menu_lateral_molecule.dart';
 
 class ClientesTemplate extends StatefulWidget {
   ClientesTemplate({Key? key}) : super(key: key);
@@ -14,11 +15,10 @@ class ClientesTemplate extends StatefulWidget {
 class _ClientesTemplateState extends State<ClientesTemplate> {
   @override
   Widget build(BuildContext context) {
+    final _sizeScreen = MediaQuery.of(context).size;
     return Scaffold(
       appBar: PreferredSize(
-          preferredSize: Size.fromHeight(
-            10.h,
-          ),
+          preferredSize: Size.fromHeight(_sizeScreen.height * 0.1),
           child: MenuWidget()),
       body: Center(
         child: Text("Clientes"),

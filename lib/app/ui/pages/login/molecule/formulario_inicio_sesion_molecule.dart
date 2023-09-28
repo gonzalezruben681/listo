@@ -1,11 +1,10 @@
-/// Import Flutter
+// Import Flutter
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 /// Import Librarires
 import 'package:listo/generated/l10n.dart';
-import 'package:listo/hook_general.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -15,13 +14,15 @@ import 'package:listo/app/domain/entities/login_dto/login_dto.dart';
 /// Import Rutas
 import 'package:listo/app/ui/routes/routes.dart';
 
-/// Import notifier
-import 'package:listo/app/domain/notifiers/login/login_state_notifier.dart';
-import 'package:listo/app/domain/notifiers/modulo/modulo_state_notifier.dart';
+/// Import Injections
+import 'package:listo/app/injection_controllers/injection_controllers.dart';
+
+/// Import Controllers
+import 'package:listo/app/domain/controllers/login/login_state_controller.dart';
 
 /// Import Widgets
+import 'package:listo/app/ui/widgets/atom/logo_atom.dart';
 import 'package:listo/app/ui/widgets/atom/alerta_atom.dart';
-import 'package:listo/app/ui/pages/login/widgets/atom/logo_atom.dart';
 
 /// Import Moleculas
 import 'fomulario_lista_rutas_molecule.dart';
@@ -38,11 +39,13 @@ import 'package:listo/app/ui/utils/navegacion_rutas.dart';
 import 'package:listo/app/ui/utils/constantes_color_tema.dart';
 import 'package:listo/app/ui/utils/validaciones_personalizadas.dart';
 
-// ignore: must_be_immutable
-class FormularioInicioSesion extends HookWidget {
-  // late LoginBloc _loginBloc;
-  late LoginDto _loginDto;
+class FormularioInicioSesion extends StatefulHookWidget {
+  FormularioInicioSesion({Key? key}) : super(key: key);
+  @override
+  _FormularioInicioSesionState createState() => _FormularioInicioSesionState();
+}
 
+class _FormularioInicioSesionState extends State<FormularioInicioSesion> {
   final FormGroup form = fb.group(<String, Object>{
     'correo': FormControl<String>(
       validators: [
@@ -57,12 +60,16 @@ class FormularioInicioSesion extends HookWidget {
       Validators.maxLength(50)
     ],
   });
+  @override
+  void initState() {
+    context.read(loginStateControllerProvider.notifier).inicial();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    useCargarDatos(()=> context.read(loginStateNotifierProvider.notifier).inicial());
     return ProviderListener(
-      provider: loginStateNotifierProvider,
+      provider: loginStateControllerProvider,
       onChange: (context, state) {
         if (state is AutenticadoState) {
           NavegacionRutas()
@@ -70,14 +77,12 @@ class FormularioInicioSesion extends HookWidget {
         }
 
         if (state is CargandoState) {
-          AlertaAtom(CargandoMolecule()).cargando(context);
+          AlertaAtom(CargandoMolecule()).alerta(context);
         }
 
         if (state is ErrorState) {
           NavegacionRutas().cerrar(context);
-
           FocusManager.instance.primaryFocus!.unfocus();
-
           ModalMolecule().modal(
               child: MensajesMolecule(
                 icon: FaIcon(
@@ -94,24 +99,21 @@ class FormularioInicioSesion extends HookWidget {
                   accion: () {
                     NavegacionRutas().cerrar(context);
                   },
-                ).botonPrimario(),
+                ).botonPrimario(context),
               ),
               context: context);
-
           if (state.error!.codigo == '401') {
-            context.read(loginStateNotifierProvider.notifier).cerrarSesion();
-            // BlocProvider.of<LoginBloc>(context).add(CerrarSesion());
+            context.read(loginStateControllerProvider.notifier).cerrarSesion();
           }
         }
 
         if (state is ConsultaRutasState) {
           NavegacionRutas().cerrar(context);
-          _consultarRutas(context);
+          _consultarRutas(context, state.loginDto);
         }
 
         if (state is ListaRutasState) {
           NavegacionRutas().cerrar(context);
-
           if (state.listaRutas.opciones.length == 1) {
             NavegacionRutas()
                 .redireccionarNombreRutaLimpiar(context, Routes.home);
@@ -121,17 +123,15 @@ class FormularioInicioSesion extends HookWidget {
                 context: context,
                 child: FormularioListaRutas(
                   listaRutas: state.listaRutas.opciones,
-                  loginDto: _loginDto,
+                  loginDto: state.loginDto,
                 ));
           }
         }
-
         if (state is LoginExitosoState) {
-          // NavegacionRutas().cerrar(context);
           context
               .read(moduloStateNotifierProvider.notifier)
               .consultarPermisos();
-          // BlocProvider.of<ModuloBloc>(context).add(ConsultarPermisos());
+
           NavegacionRutas()
               .redireccionarNombreRutaLimpiar(context, Routes.home);
         }
@@ -143,9 +143,7 @@ class FormularioInicioSesion extends HookWidget {
             children: [
               SizedBox(height: 10),
               Container(
-                child: LogoAtom(
-                  ubicacionImagen: 'assets/img/logo_listo.png',
-                ),
+                child: LogoAtom(),
               ),
               Column(
                 children: [
@@ -178,10 +176,10 @@ class FormularioInicioSesion extends HookWidget {
                     texto: S.of(context).tituloBotonLogin,
                     accion: () => _consultarConfiguracionBD(context),
                     anchoBoton: "lg",
-                  ).botonPrimario(),
+                  ).botonPrimario(context),
                   UiBoton(
                     texto: S.of(context).tituloBotonLogin,
-                    accion:() => abrirConfiguracionConexion(context),
+                    accion: () => abrirConfiguracionConexion(context),
                     anchoBoton: "lg",
                   ).botonTexto(
                     UiTexto()
@@ -206,34 +204,29 @@ class FormularioInicioSesion extends HookWidget {
   _consultarConfiguracionBD(BuildContext context) {
     form.markAllAsTouched();
     if (form.valid) {
-      context
-          .read(loginStateNotifierProvider.notifier)
-          .consultarConfiguracion();
-      //_loginBloc.add(ConsultarConfiguracionBD());
-    }
-  }
-
-  _consultarRutas(BuildContext context) {
-    form.markAllAsTouched();
-    if (form.valid) {
       String? celular;
       String? correo;
-
       if (ValidacionesPersonalizadas().esNumero(form.control('correo').value)) {
         celular = form.control('correo').value;
       } else {
         correo = form.control('correo').value;
       }
-
-      _loginDto = LoginDto(
+      LoginDto _loginDto = LoginDto(
         correo: correo,
         celular: celular,
         clave: form.control('clave').value,
       );
       context
-          .read(loginStateNotifierProvider.notifier)
-          .consultarRutas(_loginDto);
-      // _loginBloc.add(ConsultarRutas(inicioSesionDTO: _loginDto));
+          .read(loginStateControllerProvider.notifier)
+          .consultarConfiguracion(_loginDto);
     }
+  }
+
+  _consultarRutas(BuildContext context, LoginDto loginDto) {
+    form.markAllAsTouched();
+
+    context
+        .read(loginStateControllerProvider.notifier)
+        .consultarRutas(loginDto);
   }
 }

@@ -6,7 +6,7 @@ class AlertaAtom {
 
   AlertaAtom(this.child);
 
-  void cargando(BuildContext context) {
+  void alerta(BuildContext context) {
     showDialog(
       context: context,
       barrierDismissible: false,

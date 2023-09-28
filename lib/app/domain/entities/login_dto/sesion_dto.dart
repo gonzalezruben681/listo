@@ -1,14 +1,15 @@
 class SesionDTO {
-  SesionDTO(
-      {required this.usuario,
-      required this.token,
-      required this.tokenExpira,
-      required this.codigoUsuario});
-
   String usuario;
   String token;
   String tokenExpira;
   int codigoUsuario;
+
+  SesionDTO({
+    required this.usuario,
+    required this.token,
+    required this.tokenExpira,
+    required this.codigoUsuario,
+  });
 
   factory SesionDTO.fromJson(Map<String, dynamic> json) => SesionDTO(
       usuario: json["usuario"],
@@ -23,4 +24,3 @@ class SesionDTO {
         "codigo_usuario": codigoUsuario
       };
 }
-

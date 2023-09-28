@@ -2,8 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-/// Import Libreries
-import 'package:sizer/sizer.dart';
+/// Import Libraries
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class DeslizadorImagenesWidget extends StatefulWidget {
@@ -31,13 +30,14 @@ class _DeslizadorImagenesStateWidget extends State<DeslizadorImagenesWidget> {
   ];
   @override
   Widget build(BuildContext context) {
+    final _sizeScreen = MediaQuery.of(context).size;
     return Container(
       padding: EdgeInsets.all(10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Container(
-            height: 20.h,
+            height: _sizeScreen.height * 0.15,
             child: PageView.builder(
               itemCount: title.length,
               controller: controller,
@@ -107,7 +107,7 @@ class _DeslizadorImagenesStateWidget extends State<DeslizadorImagenesWidget> {
           Padding(
             padding: const EdgeInsets.only(left: 8.0),
             child: Container(
-              width: 8.w,
+              width: _sizeScreen.width * 0.08,
               alignment: Alignment.topLeft,
               child: SmoothPageIndicator(
                 controller: controller,

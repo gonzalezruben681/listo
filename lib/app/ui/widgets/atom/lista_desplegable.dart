@@ -11,14 +11,13 @@ import 'package:listo/app/domain/entities/utils/opcion_dto.dart';
 
 class ListaDesplegable extends StatelessWidget {
   const ListaDesplegable({
-    Key? key,
     this.nombreFormulario,
     this.mensajesError,
     this.sugerenciaCampo,
     this.etiquetaCampo,
     required this.items,
     this.titulo,
-  }) : super(key: key);
+  });
 
   final String? nombreFormulario;
   final Map<String, String> Function(FormControl<dynamic>)? mensajesError;
@@ -87,8 +86,11 @@ class ListaDesplegable extends StatelessWidget {
               ),
               items: items,
               itemAsString: (OpcionDTO item) => item.descripcion.toString(),
-              dropdownBuilder: _customDropDownExample,
-              popupItemBuilder: _customPopupItemBuilderExample2,
+              dropdownBuilder: _customDropDown,
+              popupItemBuilder: _customPopupItemBuilder,
+              emptyBuilder: (context, searchEntry) => Center(
+                child: Text(S.of(context).datosNoEncontrados),
+              ),
             ),
           ),
         ],
@@ -96,7 +98,7 @@ class ListaDesplegable extends StatelessWidget {
     );
   }
 
-  Widget _customDropDownExample(
+  Widget _customDropDown(
       BuildContext context, OpcionDTO? item, String itemDesignation) {
     if (item == null) {
       return Container();
@@ -108,7 +110,7 @@ class ListaDesplegable extends StatelessWidget {
     );
   }
 
-  Widget _customPopupItemBuilderExample2(
+  Widget _customPopupItemBuilder(
       BuildContext context, OpcionDTO item, bool isSelected) {
     return Container(
       // margin: EdgeInsets.symmetric(horizontal: 8),

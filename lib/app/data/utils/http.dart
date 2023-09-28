@@ -5,34 +5,45 @@ import 'dart:convert';
 
 /// Import Libraries
 import 'package:http/http.dart' as http;
-
-import 'package:listo/app/data/utils/error_general.dart';
-import 'package:listo/app/domain/entities/utils/error_dto.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 /// Import Entities
 import 'package:listo/app/domain/entities/generic_dto.dart';
+import 'package:listo/app/domain/entities/utils/error_dto.dart';
 import 'package:listo/app/domain/entities/configuracion_dto/configuracion_dto.dart';
 
-/// Import Respositories
-import 'package:listo/app/data/repository_impl/preferences_repository_impl/preferences_repository_impl.dart';
+/// Import Implements
+import 'package:listo/app/data/service_impl/preferences_repository_impl/preferences_repository_impl.dart';
 
 /// Import Utils
+import 'package:listo/app/data/utils/error_general.dart';
 import 'package:listo/app/data/utils/custom_exception.dart';
 import 'package:listo/app/data/utils/constantes_endpoints.dart';
 
 class HttpService {
-  final Map<String, dynamic>? body;
   final String endPoint;
-  final String? token;
 
-  HttpService({this.body, required this.endPoint, this.token});
+  HttpService(this.endPoint);
+
+  bool _verificarListaNegra(String endPoint) {
+    List<String> listaNegra = ConstantesEndpoints.listaNegra;
+    bool respuesta = false;
+
+    for (String i in listaNegra) {
+      if (endPoint.contains(i)) {
+        respuesta = true;
+        break;
+      }
+    }
+    return respuesta;
+  }
 
   Future<Object?> getHttp() async {
     try {
-      final ConfiguracionDTO configuracion = await obtenerConfiguracion();
+      final ConfiguracionDTO configuracion = await _obtenerConfiguracion();
 
-      final Map<String, String> headers =
-          obtenerCabeceras(token, configuracion.puertoMovil);
+      final Map<String, String> headers = await _obtenerCabeceras(
+          endPoint: endPoint, puertoMovil: configuracion.puertoMovil);
 
       final http.Response respuesta = await http
           .get(
@@ -73,12 +84,12 @@ class HttpService {
     }
   }
 
-  Future<Object?> postHttp() async {
+  Future<Object?> postHttp(Map<String, dynamic>? body) async {
     try {
-      final ConfiguracionDTO configuracion = await obtenerConfiguracion();
+      final ConfiguracionDTO configuracion = await _obtenerConfiguracion();
 
-      final Map<String, String> headers =
-          obtenerCabeceras(token, configuracion.puertoMovil);
+      final Map<String, String> headers = await _obtenerCabeceras(
+          endPoint: endPoint, puertoMovil: configuracion.puertoMovil);
 
       final http.Response respuesta = await http
           .post(
@@ -116,7 +127,7 @@ class HttpService {
     }
   }
 
-  Future<ConfiguracionDTO> obtenerConfiguracion() async {
+  Future<ConfiguracionDTO> _obtenerConfiguracion() async {
     final configuracionLocal =
         await PreferencesRepositoryImpl().read("configuracion");
 
@@ -130,19 +141,25 @@ class HttpService {
     return configuracion;
   }
 
-  Map<String, String> obtenerCabeceras(String? token, String? pruertoMovil) {
+  Future<Map<String, String>> _obtenerCabeceras(
+      {required String endPoint, String? puertoMovil}) async {
     final Map<String, String> listaCabeceras = <String, String>{};
 
     listaCabeceras.putIfAbsent(
         HttpHeaders.contentTypeHeader, () => 'application/json');
 
-    listaCabeceras.putIfAbsent("Port-Mobile", () => pruertoMovil ?? "");
+    listaCabeceras.putIfAbsent("Port-Mobile", () => puertoMovil ?? "");
 
-    if (token != null && token.isNotEmpty) {
-      listaCabeceras.putIfAbsent(
-          HttpHeaders.authorizationHeader, () => 'Bearer ' + token);
+    if (!_verificarListaNegra(endPoint)) {
+      final secureStorage = FlutterSecureStorage();
+
+      final String? token = await secureStorage.read(key: 'tokenSesion');
+
+      if (token != null && token.isNotEmpty) {
+        listaCabeceras.putIfAbsent(
+            HttpHeaders.authorizationHeader, () => 'Bearer ' + token);
+      }
     }
-
     return listaCabeceras;
   }
 }

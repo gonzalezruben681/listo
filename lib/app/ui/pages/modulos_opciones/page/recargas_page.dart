@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:listo/app/ui/pages/modulos_opciones/template/modulo_opciones_template.dart';
 
 class ModuloOpcionesPage extends StatelessWidget {
-  const ModuloOpcionesPage({Key? key, required this.titulo}) : super(key: key);
+  const ModuloOpcionesPage(this.titulo);
 
   final String titulo;
 

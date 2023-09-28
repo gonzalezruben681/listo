@@ -1,13 +1,13 @@
 class ConfiguracionDTO {
+  String? urlPuente;
+  String? puertoMovil;
+  String? idioma;
+
   ConfiguracionDTO({
     this.urlPuente,
     this.puertoMovil,
     this.idioma,
   });
-
-  String? urlPuente;
-  String? puertoMovil;
-  String? idioma;
 
   factory ConfiguracionDTO.fromJson(Map<String, dynamic> json) =>
       ConfiguracionDTO(

@@ -12,9 +12,7 @@ class GenericoDTO {
         payload: json["payload"],
       );
 
-  String toJson() => json.encode(toMap());
-
-  Map<String, dynamic> toMap() => {
+  Map<String, dynamic> toJson() => {
         "status": status,
         "payload": payload,
       };

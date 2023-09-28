@@ -6,11 +6,10 @@ class BotonRedesSocialesAtom extends StatelessWidget {
   final VoidCallback accion;
   final Color? color;
   const BotonRedesSocialesAtom({
-    Key? key,
     this.icono,
     required this.accion,
     this.color,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 class FondoWidget extends StatelessWidget {
   final String ubicacionImagen;
 
-  FondoWidget({
-    required this.ubicacionImagen,
-  });
+  FondoWidget(this.ubicacionImagen);
   @override
   Widget build(BuildContext context) {
     return Container(

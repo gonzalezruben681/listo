@@ -1,9 +1,8 @@
 /// Import Flutter
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:listo/app/domain/notifiers/login/login_state_notifier.dart';
-import 'package:listo/app/domain/notifiers/modulo/modulo_state_notifier.dart';
-//import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:listo/app/ui/hooks/hook_general.dart';
 
 /// Import Librarires
 import 'package:listo/generated/l10n.dart';
@@ -15,9 +14,11 @@ import 'package:listo/app/domain/entities/login_dto/permisos_dto.dart';
 /// Import Routes
 import 'package:listo/app/ui/routes/routes.dart';
 
-/// Import Blocs
-//import 'package:listo/app/domain/blocs/login/login_bloc.dart';
-//import 'package:listo/app/domain/blocs/modulo/modulo_bloc.dart';
+/// Import Injections
+import 'package:listo/app/injection_controllers/injection_controllers.dart';
+
+/// Import Controllers
+import 'package:listo/app/domain/controllers/modulo/modulo_state_controller.dart';
 
 /// Import Pages
 import 'package:listo/app/ui/pages/modulos_opciones/page/recargas_page.dart';
@@ -32,31 +33,16 @@ import 'package:listo/app/ui/utils/navegacion_rutas.dart';
 import 'package:listo/app/ui/widgets/utils/ui_boton.dart';
 import 'package:listo/app/ui/utils/constantes_color_tema.dart';
 
-class ModulosWidget extends StatefulWidget {
-  ModulosWidget({Key? key}) : super(key: key);
-
-  @override
-  _ModulosWidgetState createState() => _ModulosWidgetState();
-}
-
-class _ModulosWidgetState extends State<ModulosWidget> {
-  // late ModuloBloc _moduloBloc;
-
-  @override
-  void initState() {
-    Future.delayed(
-        Duration.zero,
-        () => context
-            .read(moduloStateNotifierProvider.notifier)
-            .consultarPermisosLocal());
-    super.initState();
-  }
-
+class ModulosWidget extends HookWidget {
   @override
   Widget build(BuildContext context) {
+    useCargarDatos(() => context
+        .read(moduloStateNotifierProvider.notifier)
+        .consultarPermisosLocal());
     final _sizeScreen = MediaQuery.of(context).size;
-    return Builder(builder: (context) {
-      return ProviderListener(
+    final state = useProvider(moduloStateNotifierProvider);
+
+    return ProviderListener(
         provider: moduloStateNotifierProvider,
         onChange: (context, state) {
           if (state is ErrorModuloState) {
@@ -76,7 +62,7 @@ class _ModulosWidgetState extends State<ModulosWidget> {
                     accion: () {
                       if (state.errorDto!.codigo == '401') {
                         context
-                            .read(loginStateNotifierProvider.notifier)
+                            .read(loginStateControllerProvider.notifier)
                             .cerrarSesion();
                         NavegacionRutas().redireccionarNombreRutaLimpiar(
                             context, Routes.login);
@@ -84,30 +70,25 @@ class _ModulosWidgetState extends State<ModulosWidget> {
                         NavegacionRutas().cerrar(context);
                       }
                     },
-                  ).botonPrimario(),
+                  ).botonPrimario(context),
                 ),
                 context: context);
           }
         },
-        child: Consumer(
-          builder: (context, watch, child) {
-            final state = watch(moduloStateNotifierProvider);
-            double childAspectRatio = 1.1;
-            if (_sizeScreen.width >= 750) {
-              childAspectRatio = 1.6;
-            }
-            return GridView.count(
-              shrinkWrap: true,
-              childAspectRatio: childAspectRatio,
-              padding: EdgeInsets.symmetric(vertical: 1),
-              physics: NeverScrollableScrollPhysics(),
-              crossAxisCount: 3,
-              children: _gernerarModulos(state.listaPermisos),
-            );
-          },
-        ),
-      );
-    });
+        child: Builder(builder: (context) {
+          double childAspectRatio = 1.1;
+          if (_sizeScreen.width >= 750) {
+            childAspectRatio = 1.6;
+          }
+          return GridView.count(
+            shrinkWrap: true,
+            childAspectRatio: childAspectRatio,
+            padding: EdgeInsets.symmetric(vertical: 1),
+            physics: NeverScrollableScrollPhysics(),
+            crossAxisCount: 3,
+            children: _gernerarModulos(state.listaPermisos, context),
+          );
+        }));
   }
 
   Map<String, dynamic> test(BuildContext context) {
@@ -140,24 +121,24 @@ class _ModulosWidgetState extends State<ModulosWidget> {
     return arreglo;
   }
 
-  List<Widget> _gernerarModulos(PermisosDTO permisos) {
-    Map<String, dynamic> arreglo = test(context);
+  List<Widget> _gernerarModulos(PermisosDTO permisos, BuildContext context) {
+    Map<String, dynamic> modulosHome = test(context);
     List<Widget> listaWidget = [];
 
     permisos.toJson().forEach((key, value) {
       value as List<dynamic>;
 
-      if (value.isNotEmpty && arreglo[key] != null) {
+      if (value.isNotEmpty && modulosHome[key] != null) {
         var modulo = ModuloWidget(
           accion: () {
             NavegacionRutas().redireccionarWidget(
                 context,
                 ModuloOpcionesPage(
-                  titulo: arreglo[key]['titulo'],
+                  modulosHome[key]['titulo'],
                 ));
           },
-          imagen: arreglo[key]['imagen'],
-          titulo: arreglo[key]['titulo'],
+          imagen: modulosHome[key]['imagen'],
+          titulo: modulosHome[key]['titulo'],
         );
 
         listaWidget.add(modulo);

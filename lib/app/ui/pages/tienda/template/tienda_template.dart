@@ -1,10 +1,7 @@
 /// Import Flutter
 import 'package:flutter/material.dart';
 
-/// Import Libreries
-import 'package:sizer/sizer.dart';
-
-/// Import Entities
+/// Import Molecules
 import 'package:listo/app/ui/pages/menu/molecule/menu_lateral_molecule.dart';
 import 'package:listo/app/ui/pages/menu/molecule/menu_molecule.dart';
 
@@ -18,11 +15,10 @@ class TiendaTemplate extends StatefulWidget {
 class _TiendaTemplateState extends State<TiendaTemplate> {
   @override
   Widget build(BuildContext context) {
+    final _sizeScreen = MediaQuery.of(context).size;
     return Scaffold(
       appBar: PreferredSize(
-          preferredSize: Size.fromHeight(
-            0.10.h,
-          ),
+          preferredSize: Size.fromHeight(_sizeScreen.height * 0.1),
           child: MenuWidget()),
       body: Center(
         child: Text("Tienda"),

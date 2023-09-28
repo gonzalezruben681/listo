@@ -1,26 +1,22 @@
 /// Import Flutter
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 
 /// Import Libraries
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// Import Widgets
 import 'package:listo/app/ui/utils/constantes_color_tema.dart';
 import 'package:listo/app/ui/pages/login/widgets/atom/boton_redes_sociales_atom.dart';
 
-
-class RedesSocialesMolecule extends HookWidget {
-  const RedesSocialesMolecule({
-    Key? key,
-  }) : super(key: key);
+class RedesSocialesMolecule extends StatelessWidget {
+  const RedesSocialesMolecule();
 
   @override
   Widget build(BuildContext context) {
+    final _sizeScreen = MediaQuery.of(context).size;
     return Container(
-        height: 7.h,
+        height: _sizeScreen.height * 0.07,
         padding: EdgeInsets.only(top: 5, bottom: 5),
         color: Color(ConstantesColorTema.azulLetras),
         child: Row(
@@ -62,7 +58,6 @@ class RedesSocialesMolecule extends HookWidget {
   }
 
   void _launchSocial(String url, String fallbackUrl) async {
-    // Don't use canLaunch because of fbProtocolUrl (fb://)
     try {
       bool launched =
           await launch(url, forceSafariVC: false, forceWebView: false);

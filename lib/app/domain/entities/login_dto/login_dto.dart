@@ -1,6 +1,11 @@
-/// Import Flutter
-
 class LoginDto {
+  String? correo;
+  String? celular;
+  String clave;
+  int? codigoRuta;
+  String? plataforma;
+  String? version;
+
   LoginDto({
     this.correo,
     this.celular,
@@ -9,13 +14,6 @@ class LoginDto {
     this.plataforma,
     this.version,
   });
-
-  String? correo;
-  String? celular;
-  String clave;
-  int? codigoRuta;
-  String? plataforma;
-  String? version;
 
   factory LoginDto.fromJson(Map<String, dynamic> json) => LoginDto(
       correo: json["correo"],

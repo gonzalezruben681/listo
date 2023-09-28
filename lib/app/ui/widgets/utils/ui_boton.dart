@@ -2,9 +2,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-/// Import Libraries
-import 'package:sizer/sizer.dart';
-
 /// Import Utils
 import 'package:listo/app/ui/utils/constantes_color_tema.dart';
 
@@ -24,31 +21,32 @@ class UiBoton {
 
       /// Tamaño boton formulario
       case "sm":
-        tamanio = 35;
+        tamanio = 0.35;
         break;
 
       /// Tamaño boton modal
       case "md":
-        tamanio = 50;
+        tamanio = 0.50;
         break;
 
       /// Tamaño boton largo
       case "lg":
-        tamanio = 72;
+        tamanio = 0.72;
         break;
     }
 
     return tamanio;
   }
 
-  Widget botonPrimario() {
+  Widget botonPrimario(BuildContext context) {
+    final _sizeScreen = MediaQuery.of(context).size;
     return MaterialButton(
       color: Color(
           ConstantesColorTema.azulLetras), // Color.fromRGBO(16, 73, 99, 1),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(30.0),
       ),
-      minWidth: selecionarAnchoBoton(anchoBoton).w,
+      minWidth: _sizeScreen.width * selecionarAnchoBoton(anchoBoton),
       padding: EdgeInsets.all(10),
       onPressed: () => accion(),
       child: Text(
@@ -60,14 +58,15 @@ class UiBoton {
     );
   }
 
-  Widget botonSecundario() {
+  Widget botonSecundario(BuildContext context) {
+    final _sizeScreen = MediaQuery.of(context).size;
     return MaterialButton(
       color: Color(ConstantesColorTema.blanco),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(30.0),
         side: BorderSide(color: Color.fromRGBO(51, 106, 149, 1)),
       ),
-      minWidth: selecionarAnchoBoton(anchoBoton).w,
+      minWidth: _sizeScreen.width * selecionarAnchoBoton(anchoBoton),
       padding: EdgeInsets.all(10),
       onPressed: () => accion(),
       child: Text(

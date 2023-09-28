@@ -1,11 +1,11 @@
 class OpcionDTO {
+  final dynamic id;
+  final String? descripcion;
+
   const OpcionDTO({
     this.id,
     this.descripcion,
   });
-
-  final dynamic id;
-  final String? descripcion;
 
   factory OpcionDTO.fromJson(Map<String, dynamic> json) => OpcionDTO(
         id: json["id"],

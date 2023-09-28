@@ -4,12 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:listo/app/ui/utils/constantes_color_tema.dart';
 
 class ModuloWidget extends StatelessWidget {
-  const ModuloWidget(
-      {Key? key,
-      required this.imagen,
-      required this.titulo,
-      required this.accion})
-      : super(key: key);
+  const ModuloWidget({
+    required this.imagen,
+    required this.titulo,
+    required this.accion,
+  });
 
   final String imagen;
   final String titulo;

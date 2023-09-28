@@ -1,37 +1,45 @@
+/// Import Flutter
 import 'package:flutter/material.dart';
+
+/// Import Widgets
+import 'package:listo/app/ui/widgets/atom/logo_atom.dart';
+import 'package:listo/app/ui/widgets/atom/imagen_atom.dart';
 import 'package:listo/app/ui/pages/menu/atom/boton_menu_atom.dart';
 
-import 'package:sizer/sizer.dart';
-
 class MenuWidget extends StatelessWidget {
-  const MenuWidget({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
+    final _sizeScreen = MediaQuery.of(context).size;
     return AppBar(
       leading: Builder(
         // para abrir el drawer con el menú
         builder: (context) {
           return BotonMenuWidget(
             accion: () => {Scaffold.of(context).openDrawer()},
-            child: Image.asset('assets/img/menu.png'),
+            child: ImagenAtom(
+              ubicacionImagen: 'assets/img/menu.png',
+              escalaImagen: 1,
+            ),
             botonPrincipal: true,
           );
         },
       ),
       centerTitle: true,
       elevation: 13.0,
-      toolbarHeight: 10.h,
+      toolbarHeight: _sizeScreen.height * 0.1,
       backgroundColor: Colors.white,
       title: Container(
-        height: 8.h,
-        width: 35.w,
-        child: Image.asset('assets/img/logo_listo.png'),
+        height: _sizeScreen.height * 0.08,
+        width: _sizeScreen.width * 0.35,
+        child: LogoAtom(),
       ),
       actions: [
         BotonMenuWidget(
           accion: () => {},
-          child: Image.asset('assets/img/impresora.png'),
+          child: ImagenAtom(
+            ubicacionImagen: 'assets/img/impresora.png',
+            escalaImagen: 1,
+          ),
         )
       ],
     );

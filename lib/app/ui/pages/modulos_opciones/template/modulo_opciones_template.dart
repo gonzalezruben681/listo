@@ -1,9 +1,6 @@
 /// Import Flutter
 import 'package:flutter/material.dart';
 
-/// Import Libreries
-import 'package:sizer/sizer.dart';
-
 /// Import Utils
 import 'package:listo/app/ui/utils/navegacion_rutas.dart';
 import 'package:listo/app/ui/utils/constantes_color_tema.dart';
@@ -30,12 +27,13 @@ class _ModuloOpcionesTemplateState extends State<ModuloOpcionesTemplate> {
   }
 
   AppBar menu() {
+    final _sizeScreen = MediaQuery.of(context).size;
     return AppBar(
         leading: Builder(
           builder: (context) {
             return Container(
-              height: 12.h,
-              width: 12.w,
+              height: _sizeScreen.height * 0.12,
+              width: _sizeScreen.width * 0.12,
               margin: EdgeInsets.only(left: 10.0, top: 15.0, bottom: 15.0),
               decoration: BoxDecoration(
                   color: Colors.white,
@@ -61,7 +59,7 @@ class _ModuloOpcionesTemplateState extends State<ModuloOpcionesTemplate> {
         ),
         centerTitle: true,
         elevation: 13.0,
-        toolbarHeight: 10.h,
+        toolbarHeight: _sizeScreen.height * 0.10,
         backgroundColor: Colors.white,
         title: Container(
           child: UiTexto().textoTitulo(widget.titulo),

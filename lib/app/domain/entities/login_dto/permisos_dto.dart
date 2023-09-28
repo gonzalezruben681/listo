@@ -1,4 +1,15 @@
 class PermisosDTO {
+  List<dynamic>? clientes;
+  List<dynamic>? venta;
+  List<dynamic>? consultas;
+  List<dynamic>? mensajes;
+  List<dynamic>? recaudo;
+  List<dynamic>? recargas;
+  List<dynamic>? rifas;
+  List<dynamic>? anulaciones;
+  List<dynamic>? tienda;
+  List<dynamic>? enrutamientoCredito;
+
   PermisosDTO({
     this.clientes,
     this.venta,
@@ -12,29 +23,19 @@ class PermisosDTO {
     this.enrutamientoCredito,
   });
 
-  List<dynamic>? clientes;
-  List<dynamic>? venta;
-  List<dynamic>? consultas;
-  List<dynamic>? mensajes;
-  List<dynamic>? recaudo;
-  List<dynamic>? recargas;
-  List<dynamic>? rifas;
-  List<dynamic>? anulaciones;
-  List<dynamic>? tienda;
-  List<dynamic>? enrutamientoCredito;
-
   factory PermisosDTO.fromJson(Map<String, dynamic> json) {
     return PermisosDTO(
       clientes: List<dynamic>.from(json["clientes"] ?? []),
-      venta: List<dynamic>.from(json["venta"]?? []),
-      consultas: List<dynamic>.from(json["consultas"]?? []),
-      mensajes: List<dynamic>.from(json["mensajes"]?? []),
-      recaudo: List<dynamic>.from(json["recaudo"]?? []),
-      recargas: List<dynamic>.from(json["recargas"]?? []),
-      rifas: List<dynamic>.from(json["rifas"]?? []),
-      anulaciones: List<dynamic>.from(json["anulaciones"]?? []),
-      tienda: List<dynamic>.from(json["tienda"]?? []),
-      enrutamientoCredito: List<dynamic>.from(json["enrutamiento_credito"]?? []),
+      venta: List<dynamic>.from(json["venta"] ?? []),
+      consultas: List<dynamic>.from(json["consultas"] ?? []),
+      mensajes: List<dynamic>.from(json["mensajes"] ?? []),
+      recaudo: List<dynamic>.from(json["recaudo"] ?? []),
+      recargas: List<dynamic>.from(json["recargas"] ?? []),
+      rifas: List<dynamic>.from(json["rifas"] ?? []),
+      anulaciones: List<dynamic>.from(json["anulaciones"] ?? []),
+      tienda: List<dynamic>.from(json["tienda"] ?? []),
+      enrutamientoCredito:
+          List<dynamic>.from(json["enrutamiento_credito"] ?? []),
     );
   }
 

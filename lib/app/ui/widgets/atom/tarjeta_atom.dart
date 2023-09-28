@@ -2,10 +2,7 @@
 import 'package:flutter/material.dart';
 
 class TarjetaWidget extends StatelessWidget {
-  const TarjetaWidget({
-    Key? key,
-    required this.child,
-  }) : super(key: key);
+  const TarjetaWidget(this.child);
 
   final Widget child;
 

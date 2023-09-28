@@ -1,18 +1,11 @@
 import 'package:flutter/material.dart';
 
-/// Import Libreries
-import 'package:sizer/sizer.dart';
-
 // Import Utils
 import 'package:listo/app/ui/utils/constantes_color_tema.dart';
 
 class BotonMenuWidget extends StatefulWidget {
   BotonMenuWidget(
-      {Key? key,
-      required this.accion,
-      required this.child,
-      this.botonPrincipal = false})
-      : super(key: key);
+      {required this.accion, required this.child, this.botonPrincipal = false});
 
   final VoidCallback accion;
   final Widget child;
@@ -35,9 +28,10 @@ class _BotonMenuWidgetState extends State<BotonMenuWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final _sizeScreen = MediaQuery.of(context).size;
     return Container(
-      height: 12.h,
-      width: 12.w,
+      height: _sizeScreen.height * 0.12,
+      width: 60,
       margin: seleccionarMargin(),
       decoration: BoxDecoration(
           color: Colors.white,

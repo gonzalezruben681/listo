@@ -1,37 +1,32 @@
 /// Import flutter
 import 'package:flutter/material.dart';
 
-import 'package:listo/app/domain/notifiers/login/login_state_notifier.dart';
-//import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:listo/app/ui/widgets/utils/ui_boton.dart';
-
 /// Import Libraries
 import 'package:listo/generated/l10n.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+/// Import Injections
+import 'package:listo/app/injection_controllers/injection_controllers.dart';
 
 /// Import Entities
 import 'package:listo/app/domain/entities/utils/opcion_dto.dart';
 import 'package:listo/app/domain/entities/login_dto/login_dto.dart';
 
-/// Import Blocs
-//import 'package:listo/app/domain/blocs/login/login_bloc.dart';
-
 /// Import widgets
 import 'package:listo/app/ui/widgets/utils/ui_texto.dart';
+import 'package:listo/app/ui/widgets/utils/ui_boton.dart';
 import 'package:listo/app/ui/widgets/atom/lista_desplegable.dart';
 
 /// Import Utils
 import 'package:listo/app/ui/utils/navegacion_rutas.dart';
 
-
 // ignore: must_be_immutable
 class FormularioListaRutas extends HookWidget {
-  
- final LoginDto loginDto;
- final  List<OpcionDTO>? listaRutas;
-  FormularioListaRutas({required this.loginDto , required this.listaRutas});
+  final LoginDto loginDto;
+  final List<OpcionDTO>? listaRutas;
+  FormularioListaRutas({required this.loginDto, required this.listaRutas});
 
   late FormGroup form;
 
@@ -41,7 +36,9 @@ class FormularioListaRutas extends HookWidget {
       'menurutas': FormControl<OpcionDTO>(
           validators: [Validators.required],
           value: OpcionDTO(
-              id: listaRutas![0].id, descripcion: listaRutas![0].descripcion))
+            id: listaRutas![0].id,
+            descripcion: listaRutas![0].descripcion,
+          ))
     });
 
     return Column(
@@ -67,18 +64,18 @@ class FormularioListaRutas extends HookWidget {
           height: 20,
         ),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             UiBoton(
-                    accion: () => NavegacionRutas().cerrar(context),
+                    accion: () => _cancelar(context),
                     texto: S.of(context).cancelar,
                     anchoBoton: "sm")
-                .botonSecundario(),
+                .botonSecundario(context),
             UiBoton(
               accion: () => _iniciarSesion(context),
               texto: S.of(context).aceptar,
               anchoBoton: "sm",
-            ).botonPrimario(),
+            ).botonPrimario(context),
           ],
         )
       ],
@@ -95,11 +92,13 @@ class FormularioListaRutas extends HookWidget {
           version: '3.0.0',
           plataforma: 'Hibrido');
 
-      listaRutas![0].id;
       context
-          .read(loginStateNotifierProvider.notifier)
+          .read(loginStateControllerProvider.notifier)
           .doLogin(_inicioSesionDTO);
-      // _loginBloc.add(Login(inicioSesionDTO: _inicioSesionDTO));
     }
+  }
+
+  void _cancelar(BuildContext context) {
+    NavegacionRutas().cerrar(context);
   }
 }
